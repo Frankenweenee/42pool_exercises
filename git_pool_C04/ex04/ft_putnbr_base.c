@@ -3,85 +3,76 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_base.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: francism <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: franki <franki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 16:51:53 by francism          #+#    #+#             */
-/*   Updated: 2024/06/06 16:51:57 by francism         ###   ########.fr       */
+/*   Updated: 2024/06/07 07:58:08 by franki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <unistd.h>
 
-int ft_strcmp(char *s1, char *s2)
+char	*create_base(int base, char *base_spa)
 {
-    int i = 0;
-    while (s1[i] != '\0' && s2[i] != '\0')
-    {
-        if (s1[i] != s2[i])
-            return (s1[i] - s2[i]);
-        i++;
-    }
-    return (s1[i] - s2[i]);
-}
+	int	i;
 
-void to_binary(int num, char *buffer)
-{
-	int val_print;
-	if (num > 0)
+	i = 0;
+	if (base < 2 || base > 36)
 	{
-		to_binary(num / 2, buffer);
-		val_print = num % 2 + '0';
-		write(1, &val_print, 1);
+		base_spa[0] = '\0';
+		return (base_spa);
 	}
-}
-
-void to_octal(int num, char *buffer)
-{
-	int val_print;
-	if (num > 0)
+	while (i < base)
 	{
-		to_octal(num / 8, buffer);
-		val_print = num % 8 + '0';
-		write(1, &val_print, 1);
-	}
-}
-
-void to_hexadecimal(int num, char *buffer)
-{
-	int	val_print;
-	if (num != 0)
-	{
-		to_hexadecimal(num / 16, buffer);
-		val_print = num % 16;
-		if (val_print < 10)
-			val_print += '0';
+		if (i < 10)
+			base_spa[i] = '0' + i;
 		else
-			val_print += 'A' - 10;
+			base_spa[i] = 'A' + (i - 10);
+		i++;
+	}
+	base_spa[i] = '\0';
+	return (base_spa);
+}
+
+void	posicional_number(int num, int base_int, char *base_var)
+{
+	char	val_print;
+
+	if (num >= base_int)
+	{
+		posicional_number(num / base_int, base_int, base_var);
+		val_print = base_var[num % base_int];
+		write(1, &val_print, 1);
+	}
+	else
+	{
+		val_print = base_var[num];
 		write(1, &val_print, 1);
 	}
 }
 
-void ft_putnbr_base(int nbr, char *base)
+void	ft_putnbr_base(int nbr, int base)
 {
-	char	buffer[100];
-	if (ft_strcmp(base, "0123456789") == 0)
-	{
-		char	val;
-		int		i;
+	char	base_spa[37];
+	char	*base_var;
 
-		i = 0;
-		while (nbr[i] != '\0')
-		{
-			val = nbr[i] + '0';
-			write(1, &val, 1);
-			i++;
-		}
-	}
-	else if (ft_strcmp(base, "01") == 0)
-		to_binary(nbr, buffer);
-	else if (ft_strcmp(base, "01234567") == 0)
-		to_octal(nbr, buffer);
-	else if (ft_strcmp(base, "0123456789ABCDEF") == 0)
-		to_hexadecimal(nbr, buffer);
-	write(1, buffer, ft_strlen(buffer));
+	base_var = create_base(base, base_spa);
+	posicional_number(nbr, base, base_var);
 }
 
+int main(void)
+{
+	long int nbr = 305963506732;
+	int base = 16;
+	int base2 = 8;
+	int base3 = 2;
+	int base4 = 10;
+
+	ft_putnbr_base(nbr, base);
+	write(1, "\n", 2);
+	ft_putnbr_base(nbr, base2);
+	write(1, "\n", 2);
+	ft_putnbr_base(nbr, base3);
+	write(1, "\n", 2);
+	ft_putnbr_base(nbr, base4);
+	write(1, "\n", 2);
+}
