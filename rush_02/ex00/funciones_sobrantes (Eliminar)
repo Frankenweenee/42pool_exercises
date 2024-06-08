@@ -1,0 +1,58 @@
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+int	create_array(int *array, char *num)
+{
+	int len;
+	int index;
+
+	len = 0;
+	index = 0;
+	while (num[index])
+	{
+		len++;
+		index++;
+	}
+	array = (int *) malloc(len * 4);
+	if (array == NULL)
+	{
+		free(array);
+		return (0);
+	}
+	index--;
+	while (index >= 0)
+	{
+		array[index] = num[index] - '0';
+		index--;
+	}
+	return (len);
+}
+
+int len_char(char *str)
+{
+	int index;
+	int len;
+
+	index = 0;
+	len = 0;
+	while (str[index] == ' ' || (str[index] >= 9 && str[index] <= 13))
+	{
+		index++;
+	}
+	while (str[index] >= '0' && str[index] <= '9')
+	{
+		len++;
+		index++;
+	}
+	while (str[index] == ' ' || (str[index] >= 9 && str[index] <= 13))
+	{
+		index++;
+	}
+	if (str[index] != '\0' || str[index] != ':')
+	{
+		return 0;
+	}
+	return (len);
+}

@@ -50,7 +50,7 @@ int counter(int num)
 	pos_num(int res_num);
 }
 
-
+/*
 int main() {
     int number = 10345;
     int digit;
@@ -65,4 +65,29 @@ int main() {
     }
 
     return 0;
+}
+*/
+int len_count (int num)
+{	int len;
+
+	len = 0;
+	while (num > 0)
+	{
+		num /= 10;
+		len++;
+	}
+	return(len);
+}
+
+int main ()
+{
+	int len;
+	len = len_count(num);
+	array = (int) malloc(len * sizeof(int));
+
+	while (len > i)
+	{
+		array [i] = num%10;
+	}
+
 }
