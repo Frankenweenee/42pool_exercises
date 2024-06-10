@@ -5,47 +5,39 @@
 #include <string.h>
 #include "dictionary.h"
 
-char *read_file_content(const char *filename)
-{
-    int fd;
-    char buffer[BUFFER_SIZE];
-    ssize_t bytes_read;
-    size_t total_bytes;
-    char *file_content;
-    char *new_file_content;
-
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
-    {
-        perror("Error opening file");
-        return NULL;
+s_number_word_pair *read_dictionary(const char *filename) {
+	int fd = open(filename, O_RDONLY);
+	if (fd == -1) {
+		print_error("Error opening file\n");
+		return NULL;
     }
-    total_bytes = 0;
-    file_content = NULL;
-    bytes_read = read(fd, buffer, sizeof(buffer));
-    while (bytes_read > 0)
+	char buffer[BUFFER_SIZE];
+	ssize_t bytes_read;
+	size_t total_bytes;
+	char *file_content;
+
+	total_bytes = 0;
+	file_content = NULL;
+    while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
     {
-        new_file_content = realloc(file_content, total_bytes + bytes_read + 1);
-        if (new_file_content == NULL)
-        {
-            perror("Memory allocation error");
-            free(file_content);
+        size_t new_length = total_bytes + bytes_read;
+        file_content = malloc(new_length + 1);
+        if (file_content == NULL) {
+            print_error("Memory allocation error\n");
             close(fd);
             return NULL;
         }
-        file_content = new_file_content;
-        memcpy(file_content + total_bytes, buffer, bytes_read);
-        total_bytes += bytes_read;
-        bytes_read = read(fd, buffer, sizeof(buffer)); // Mover asignación fuera de la condición
-    }
-    if (bytes_read == -1)
-    {
-        perror("Error reading file");
+        ft_strcpy(file_content + total_bytes, buffer);
+        total_bytes = new_length;
+
+    if (bytes_read == -1) {
+        print_error("Error reading file\n");
         free(file_content);
         close(fd);
         return NULL;
     }
-    file_content[total_bytes] = '\0';
+    }
     close(fd);
-    return file_content;
+    return (s_number_word_pair*)file_content;
 }
+

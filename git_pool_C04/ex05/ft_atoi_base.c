@@ -1,42 +1,42 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int custom_atoi(char *str) {
-	int result = 0;
-	int sign = 1;
-	int i = 0;
-
+char	validate_and_clean(char *str)
+{
+	int	i;
+	
+	i = 0;
 	while (str[i] == ' ') {
-		i++;
-	}
-
-	while (str[i] == '-' || str[i] == '+') {
-		if (str[i] == '-') {
-		sign = -1;
+			i++;
 		}
-		i++;
-    }
 
-    while (str[i] >= '0' && str[i] <= '9') {
-        result = result * 10 + (str[i] - '0');
-        i++;
-    }
+		while (str[i] == '-' || str[i] == '+') {
+			if (str[i] == '-') {
+			sign = -1;
+			}
+			i++;
+		}
+	}
+	
 
-    return result * sign;
-}
 
-/*int	ft_atoi_base(char *str, char *base)
+
+
+int	ft_atoi_base(char *str, char *base)
 {
 	int number_to_use;
 	int	i;
 	int	base_int;
 
-	number_to_use = custom_atoi(str);
-	base_int = custom_atoi(base);
-	i = 0;
-	printf("%d", number_to_use);
-	printf("%d", custom_atoi);
+	
 
+	while (str[i] >= '0' && str[i] <= '9') {
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+
+    return result * sign;
+}
 	if (base_int < 2 || base_int > 36)
 	{
 		number_to_use[0] = '\0';

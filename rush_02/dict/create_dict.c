@@ -4,40 +4,53 @@
 #include <unistd.h>
 #include "dictionary.h"
 
-s_number_word_pair *create_dictionary(char *file_content, int *count, int initial_dict_size)
+s_number_word_pair *crea_dict(char *file_content, int *count, int init_size)
 {
-    *count = 0;
-    int dict_size = initial_dict_size;
+    char *line = NULL;
+    int i;
+
+    i = 0;
+
+    int dict_size = init_size;
     s_number_word_pair *dictionary = malloc(dict_size * sizeof(s_number_word_pair));
     if (!dictionary)
     {
-        write(STDERR_FILENO, "Memory allocation error\n", 24);
+        print_error("Memory allocation error\n");
         free(file_content);
         return NULL;
     }
-
-    printf("File content:\n%s\n", file_content);
-
-    char *line = strtok(file_content, "\n");
-    while (line)
+    *line = ft_str_tok(file_content, "\n");
+    while (line != NULL)
     {
-        if (*count >= dict_size)
+        dict_size *= 2;
+        s_number_word_pair *new_dictionary = malloc(dict_size * sizeof(s_number_word_pair));
+        if (!new_dictionary)
         {
-            dict_size *= 2;
-            s_number_word_pair *new_dictionary = realloc(dictionary, dict_size * sizeof(s_number_word_pair));
-            if (!new_dictionary)
-            {
-                write(STDERR_FILENO, "Memory allocation error\n", 24);
-                free(dictionary);
-                free(file_content);
-                return NULL;
-            }
-            dictionary = new_dictionary;
+            print_error("Memory allocation error\n");
+            free(dictionary);
+            free(file_content);
+            return NULL;
         }
-        sscanf(line, "%llu: %99[^\n]", &(dictionary[*count].number), dictionary[*count].word);
-        (*count)++;
-        line = strtok(NULL, "\n");
+        while (i < *count)
+        {
+            new_dictionary[i] = dictionary[i];
+            i++;
+        }
+         free(dictionary);
+        dictionary = new_dictionary;
+        if (dictionary[i].number == NULL || dictionary[i].word == NULL) {
+            print_error("Memory allocation error\n");
+            free_dict(dictionary, i);
+            free(file_content);
+            return NULL;
+        }
+        i++;
     }
+     parse_line(line, dictionary[i].number, dictionary[i].word);
+
+
+
+        line = ft_str_tok(NULL, "\n");
 
     free(file_content);
     return dictionary;

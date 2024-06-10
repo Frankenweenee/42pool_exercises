@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define BUFFER_SIZE 4096
-#define MAX_SIZE_LENGTH 100
+#define MAX_SIZE_LENGTH 1000
 #define INITIAL_DICT_SIZE 10
 
 char	*ft_strcpy(char *dest, const char *src)
@@ -46,16 +46,15 @@ s_number_word_pair *read_dictionary(const char *filename, int *count) {
 	file_content = NULL;
     // Leer el contenido completo del archivo
     while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0) {
-        size_t new_length = total_bytes + bytes_read;  // Calcula la nueva longitud total de la cadena
-        file_content = realloc(file_content, new_length + 1);  // Reasigna memoria para la cadena
+        size_t new_length = total_bytes + bytes_read;
+        file_content = realloc(file_content, new_length + 1);
         if (file_content == NULL) {
             perror("Memory allocation error");
             close(fd);
             return NULL;
         }
-        ft_strcpy(file_content + total_bytes, buffer);  // Copia el contenido del buffer a file_content
-        total_bytes = new_length;  // Actualiza el total de bytes leídos
-    }
+        ft_strcpy(file_content + total_bytes, buffer);
+        total_bytes = new_length;
 
     if (bytes_read == -1) {
         perror("Error reading file");
@@ -67,7 +66,7 @@ s_number_word_pair *read_dictionary(const char *filename, int *count) {
     close(fd);
     return (s_number_word_pair*)file_content;
 }
-
+}
 int main(void) {
     int count = 0;
     s_number_word_pair* dictionary = read_dictionary("numbers.dict", &count);
@@ -75,15 +74,11 @@ int main(void) {
         return 1;
     }
 	int i = 0;
-    // Imprimir el contenido del archivo
     while(i < count) {
         printf("%llu: %s\n", dictionary[i].number, dictionary[i].word);
 		i++;
     }
-
-    // Liberar la memoria utilizada para almacenar el diccionario
     free(dictionary);
-
     return 0;
 }
 
